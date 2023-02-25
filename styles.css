@@ -1,0 +1,58 @@
+body {
+	background-color: lightgray;
+	margin: 0px;
+}
+
+.gameboard-wrapper {
+	display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.grid-cell {
+	padding: 70px;
+	border-style: solid;
+}
+
+
+#grid-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-areas: 
+	"grid-cell grid-cell grid-cell"
+  "grid-cell grid-cell grid-cell"
+  "grid-cell grid-cell grid-cell";
+}
+
+#grid-container > * {
+	border-width: 2px;
+}
+
+.grid-cell:nth-of-type(1), .grid-cell:nth-of-type(2), .grid-cell:nth-of-type(3){
+	border-top: none;
+}
+
+.grid-cell:nth-of-type(4), .grid-cell:nth-of-type(7) {
+	border-left: none;
+}
+
+.grid-cell:nth-of-type(1) {
+	border-left: none;
+}
+
+.grid-cell:nth-of-type(3) {
+	border-right: none;
+}
+
+.grid-cell:nth-of-type(6), .grid-cell:nth-of-type(9) {
+	border-right: none;
+}
+
+.grid-cell:nth-of-type(7), .grid-cell:nth-of-type(8), .grid-cell:nth-of-type(9) {
+	border-bottom: none;
+}
+
