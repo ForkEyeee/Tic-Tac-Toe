@@ -12,6 +12,7 @@ const gamePlayers = {
 };
 
 const winConditions = [
+  // horizontal
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -24,8 +25,6 @@ const winConditions = [
   [2, 4, 6],
 ];
 
-//
-
 (function () {
   for (let i = 0; i < gameBoardHTMLCollection.length; i++) {
     gameBoardHTMLCollection[i].addEventListener('click', (event) => {
@@ -35,40 +34,30 @@ const winConditions = [
         } else {
           gameBoard.gameBoard[i] = 'O';
         }
-
-        if (gameBoard.gameBoard.length > 9) {
-          // gameBoard.gameBoard.length = 0;
-        } else {
-          gameBoardHTMLCollection[i].innerHTML = gameBoard.gameBoard[i];
-          count = event.target.innerHTML;
-        }
+        gameBoardHTMLCollection[i].innerHTML = gameBoard.gameBoard[i];
+        count = event.target.innerHTML;
       }
-
-      //if 3 of a type of marker exists on the board, check if they are in
-
-      // element = event.target;
-      // if (gameBoardHTMLCollection[i].innerHTML === '') {
-      //   gameBoardHTMLCollection[i].innerHTML = 'X';
-      // } else if (element.innerHTML === "X"){
-      //   gameBoardHTMLCollection[i].innerHTML = 'O';
-      // }
-      console.log(element);
-      if (JSON.stringify(winConditions).includes( JSON.stringify(getInd(gameBoard.gameBoard, 'X')))) {
-        alert('You Win')
+      if (
+        JSON.stringify(winConditions).includes(
+          JSON.stringify(getInd(gameBoard.gameBoard, 'X'))
+        ) ||
+        JSON.stringify(winConditions).includes(
+          JSON.stringify(getInd(gameBoard.gameBoard, 'O'))
+        )
+      ) {
+        alert('You Win');
       }
     });
-  
   }
 })();
+
+//finds the indices at which "X" or "O" appears in the gameBoard.gameBoard array.
 
 function getInd(arr, val) {
   let index = [],
     i = -1;
   while ((i = arr.indexOf(val, i + 1)) != -1) {
     index.push(i);
-  }
-  if (arr.length > 3) {
-    //arr.pop();
   }
   return index;
 }
