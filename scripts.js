@@ -1,5 +1,6 @@
 const gameBoardNodeList = document.querySelectorAll('.grid-cell');
 const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
+let gameOver;
 let element;
 let count = 'O';
 const gameBoard = {
@@ -13,39 +14,92 @@ const gamePlayers = {
 
 const winConditions = [
   // horizontal
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
+  [0, 1, 2], // 3
+  [3, 4, 5], // 12
+  [6, 7, 8], // 21
+
   // vertical
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
+  [0, 3, 6], // 9
+  [1, 4, 7], // 12
+  [2, 5, 8], // 15
+
   // diagonal
-  [0, 4, 8],
-  [2, 4, 6],
+  [0, 4, 8], // 12
+  [2, 4, 6], // 12
 ];
 
 (function () {
   for (let i = 0; i < gameBoardHTMLCollection.length; i++) {
     gameBoardHTMLCollection[i].addEventListener('click', (event) => {
+      // if ((gameOver = 1)) {
+      //   return;
+      // }
+      currentMarker = event.innerHTML;
       if (gameBoardHTMLCollection[i].innerHTML === '') {
         if (gameBoard.gameBoard[i] === '' && count === 'O') {
           gameBoard.gameBoard[i] = 'X';
+          currentMarker = gameBoard.gameBoard[i];
         } else {
           gameBoard.gameBoard[i] = 'O';
+          currentMarker = gameBoard.gameBoard[i];
         }
         gameBoardHTMLCollection[i].innerHTML = gameBoard.gameBoard[i];
         count = event.target.innerHTML;
+        test = getInd(gameBoard.gameBoard, 'X');
+        test2 = getInd(gameBoard.gameBoard, 'O');
       }
       if (
-        JSON.stringify(winConditions).includes(
-          JSON.stringify(getInd(gameBoard.gameBoard, 'X'))
-        ) ||
-        JSON.stringify(winConditions).includes(
-          JSON.stringify(getInd(gameBoard.gameBoard, 'O'))
-        )
+        (test.includes(winConditions[0][0]) &&
+          test.includes(winConditions[0][1]) &&
+          test.includes(winConditions[0][2])) ||
+        (test.includes(winConditions[1][0]) &&
+          test.includes(winConditions[1][1]) &&
+          test.includes(winConditions[1][2])) ||
+        (test.includes(winConditions[2][0]) &&
+          test.includes(winConditions[2][1]) &&
+          test.includes(winConditions[2][2])) ||
+        (test.includes(winConditions[3][0]) &&
+          test.includes(winConditions[3][1]) &&
+          test.includes(winConditions[3][2])) ||
+        (test.includes(winConditions[4][0]) &&
+          test.includes(winConditions[4][1]) &&
+          test.includes(winConditions[4][2])) ||
+        (test.includes(winConditions[5][0]) &&
+          test.includes(winConditions[5][1]) &&
+          test.includes(winConditions[5][2])) ||
+        (test.includes(winConditions[6][0]) &&
+          test.includes(winConditions[6][1]) &&
+          test.includes(winConditions[6][2])) ||
+        (test.includes(winConditions[7][0]) &&
+          test.includes(winConditions[7][1]) &&
+          test.includes(winConditions[7][2])) ||
+        (test2.includes(winConditions[0][0]) &&
+          test2.includes(winConditions[0][1]) &&
+          test2.includes(winConditions[0][2])) ||
+        (test2.includes(winConditions[1][0]) &&
+          test2.includes(winConditions[1][1]) &&
+          test2.includes(winConditions[1][2])) ||
+        (test2.includes(winConditions[2][0]) &&
+          test2.includes(winConditions[2][1]) &&
+          test2.includes(winConditions[2][2])) ||
+        (test2.includes(winConditions[3][0]) &&
+          test2.includes(winConditions[3][1]) &&
+          test2.includes(winConditions[3][2])) ||
+        (test2.includes(winConditions[4][0]) &&
+          test2.includes(winConditions[4][1]) &&
+          test2.includes(winConditions[4][2])) ||
+        (test2.includes(winConditions[5][0]) &&
+          test2.includes(winConditions[5][1]) &&
+          test2.includes(winConditions[5][2])) ||
+        (test2.includes(winConditions[6][0]) &&
+          test2.includes(winConditions[6][1]) &&
+          test2.includes(winConditions[6][2])) ||
+        (test2.includes(winConditions[7][0]) &&
+          test2.includes(winConditions[7][1]) &&
+          test2.includes(winConditions[7][2]))
       ) {
-        alert('You Win');
+        gameOver = 1;
+        alert(`${currentMarker} Wins!`);
       }
     });
   }
@@ -67,3 +121,11 @@ const controlGame = {
 };
 
 //When the user presses on a grid cell, the markers will alternate between X and O.
+// function test(arr) {
+//   text = '[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]';
+//   for (i = 0; i < arr.length; i++) {
+//     if (text.includes(arr[i])) {
+//       console.log('works');
+//     }
+//   }
+// }
