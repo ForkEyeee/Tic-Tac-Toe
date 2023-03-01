@@ -1,6 +1,6 @@
 const gameBoardNodeList = document.querySelectorAll('.grid-cell');
 const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
-let gameOver;
+let gameOver = 0 ;
 let element;
 let count = 'O';
 const gameBoard = {
@@ -31,11 +31,9 @@ const winConditions = [
 (function () {
   for (let i = 0; i < gameBoardHTMLCollection.length; i++) {
     gameBoardHTMLCollection[i].addEventListener('click', (event) => {
-      // if ((gameOver = 1)) {
-      //   return;
-      // }
+      
       currentMarker = event.innerHTML;
-      if (gameBoardHTMLCollection[i].innerHTML === '') {
+      if (gameBoardHTMLCollection[i].innerHTML === '' && gameOver !== 1) {
         if (gameBoard.gameBoard[i] === '' && count === 'O') {
           gameBoard.gameBoard[i] = 'X';
           currentMarker = gameBoard.gameBoard[i];
@@ -47,7 +45,8 @@ const winConditions = [
         count = event.target.innerHTML;
         test = getInd(gameBoard.gameBoard, 'X');
         test2 = getInd(gameBoard.gameBoard, 'O');
-      }
+      } else {}
+      if (gameOver != 1) {
       if (
         (test.includes(winConditions[0][0]) &&
           test.includes(winConditions[0][1]) &&
@@ -100,8 +99,9 @@ const winConditions = [
       ) {
         gameOver = 1;
         alert(`${currentMarker} Wins!`);
-      }
-    });
+
+      } else {determineTie ();}
+    }});
   }
 })();
 
@@ -129,3 +129,17 @@ const controlGame = {
 //     }
 //   }
 // }
+
+
+function determineTie () {
+  let arrayCount = 0;
+  for (i = 0; i < gameBoardHTMLCollection.length; i++) {
+    if( gameBoardHTMLCollection[i].innerHTML !== "") {
+    arrayCount++
+  } 
+  }
+  if (arrayCount === 9) {
+    return alert("It's a Tie!");
+    
+  }
+}
