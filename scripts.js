@@ -42,13 +42,12 @@ const winConditions = [
         } else if (gameBoardHTMLCollection[i].innerHTML === '' && gameOver !== 1) {
           gameBoard.gameBoard[i] = 'O';
           currentMarker = gameBoard.gameBoard[i];
-          {console.log('no')}
         } 
         gameBoardHTMLCollection[i].innerHTML = currentMarker;
         currentMarker = event.target.innerHTML;
         test = getInd(gameBoard.gameBoard, 'X');
         test2 = getInd(gameBoard.gameBoard, 'O');
-      } else {console.log('test')}
+      } 
       if (gameOver != 1) {
         for (u = 0; u < winConditions.length; u++) {
           x = 0;
@@ -117,11 +116,7 @@ function determineTie() {
       arrayCount++;
     }
   }
-  if (arrayCount === 9 && winMessage === '') {
+  if (arrayCount === 9 && winMessage.innerHTML === '') {
     winMessage.innerHTML = "It's a Tie!";
   }
-}
-
-function checktest(test) {
-  return test.includes(winConditions[i][0]);
 }
