@@ -1,7 +1,10 @@
 const gameBoardNodeList = document.querySelectorAll('.grid-cell');
 const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
 const winMessage = document.getElementById('win-message');
+const restartButton = document.getElementById('restart-btn');
 let currentMarker = 'O';
+let playerOneName;
+let playerTwoName;
 let filteredArray;
 let gameOver = 0;
 let element;
@@ -14,6 +17,13 @@ const gamePlayers = {
   Player1: 'Matt',
   Player2: 'Jeff',
 };
+
+function recordNames() {
+  playerOneName = prompt('Enter Player X Name');
+  playerTwoName = prompt('Enter player O Name');
+}
+
+recordNames();
 
 const winConditions = [
   // horizontal
@@ -34,20 +44,22 @@ const winConditions = [
 (function () {
   for (let i = 0; i < gameBoardHTMLCollection.length; i++) {
     gameBoardHTMLCollection[i].addEventListener('click', (event) => {
-     
       if (gameBoardHTMLCollection[i].innerHTML === '' && gameOver !== 1) {
         if (gameBoard.gameBoard[i] === '' && currentMarker === 'O') {
           gameBoard.gameBoard[i] = 'X';
           currentMarker = gameBoard.gameBoard[i];
-        } else if (gameBoardHTMLCollection[i].innerHTML === '' && gameOver !== 1) {
+        } else if (
+          gameBoardHTMLCollection[i].innerHTML === '' &&
+          gameOver !== 1
+        ) {
           gameBoard.gameBoard[i] = 'O';
           currentMarker = gameBoard.gameBoard[i];
-        } 
+        }
         gameBoardHTMLCollection[i].innerHTML = currentMarker;
         currentMarker = event.target.innerHTML;
         test = getInd(gameBoard.gameBoard, 'X');
         test2 = getInd(gameBoard.gameBoard, 'O');
-      } 
+      }
       if (gameOver != 1) {
         for (u = 0; u < winConditions.length; u++) {
           x = 0;
@@ -78,10 +90,12 @@ const winConditions = [
                 gameBoardHTMLCollection[filteredArray[0]].style.color = 'red';
                 gameBoardHTMLCollection[filteredArray[1]].style.color = 'red';
                 gameBoardHTMLCollection[filteredArray[2]].style.color = 'red';
+                currentMarker = playerOneName;
               } else {
                 gameBoardHTMLCollection[filteredArray2[0]].style.color = 'blue';
                 gameBoardHTMLCollection[filteredArray2[1]].style.color = 'blue';
                 gameBoardHTMLCollection[filteredArray2[2]].style.color = 'blue';
+                currentMarker = playerTwoName;
               }
               winMessage.innerHTML = `Player ${currentMarker} Wins!`;
               gameOver = 1;
@@ -120,3 +134,17 @@ function determineTie() {
     winMessage.innerHTML = "It's a Tie!";
   }
 }
+
+function restartGame() {
+  gameBoard.gameBoard = ['', '', '', '', '', '', '', '', ''];
+  for (i = 0; i < gameBoardHTMLCollection.length; i++) {
+    gameBoardHTMLCollection[i].innerHTML = '';
+    gameBoardHTMLCollection[i].style.color = '';
+  }
+  winMessage.innerHTML = '';
+
+  gameOver = 0;
+  currentMarker = 'O';
+}
+
+restartButton.addEventListener('click', restartGame);
