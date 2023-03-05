@@ -1,6 +1,3 @@
-const gameBoardNodeList = document.querySelectorAll('.grid-cell');
-const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
-const winMessage = document.getElementById('win-message');
 const restartButton = document.getElementById('restart-btn');
 let currentMarker = 'O';
 let filteredArray;
@@ -9,8 +6,41 @@ let count = 0;
 
 const gameBoard = {
   gameBoard: ['', '', '', '', '', '', '', '', ''],
+
+  playRound(letter, index) {
+    this.gameBoard[index] = letter;
+  },
 };
 
+const ui = {
+  getBoardContainer() {
+    const gameBoardNodeList = document.querySelectorAll('.grid-cell');
+    const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
+    return gameBoardHTMLCollection;
+  },
+
+  renderBoard(i) {
+    const container = this.getBoardContainer();
+    container[i].innerHTML = currentMarker;
+    // container.forEach(function (item) {
+    //   container.innerHTML = "X"
+    // render a square in the container with the appropriate letter
+    // })
+  },
+  renderWinScreen(currentMarker) {
+    const winMessage = document.getElementById('win-message');
+
+    winMessage.innerHTML = `Player ${currentMarker} Wins!`;
+
+    // render a different screen declaring the player passed in as the winner
+  },
+};
+
+(function () {
+  for (let i = 0; i < ui.getBoardContainer().length; i++) {
+    ui.getBoardContainer()[i].addEventListener('click', playGame);
+  }
+})();
 const gamePlayers = {
   Player1: '',
   Player2: '',
@@ -37,26 +67,26 @@ const winConditions = [
 ];
 
 function handleClick(event) {
-  let i = Array.from(gameBoardHTMLCollection).indexOf(event.target);
+  let i = Array.from(ui.getBoardContainer()).indexOf(event.target);
   return i;
 }
 
-  function playRound (event) {
+function playGame(event) {
   let i = handleClick(event);
-  if (gameBoardHTMLCollection[i].innerHTML === '' && gameOver !== 1) {
-  if (gameBoard.gameBoard[i] === '' && currentMarker === 'O') {
-    gameBoard.gameBoard[i] = 'X';
-    currentMarker = gameBoard.gameBoard[i];
-  } else if (gameBoard.gameBoard[i] === '' && gameOver !== 1) {
-    gameBoard.gameBoard[i] = 'O';
-    currentMarker = gameBoard.gameBoard[i];
-  }
-    gameBoardHTMLCollection[i].innerHTML = currentMarker;
-   currentMarker = event.target.innerHTML;
+  if (ui.getBoardContainer()[i].innerHTML === '' && gameOver !== 1) {
+    if (gameBoard.gameBoard[i] === '' && currentMarker === 'O') {
+      gameBoard.playRound('X', i);
+      currentMarker = gameBoard.gameBoard[i];
+    } else if (gameBoard.gameBoard[i] === '' && gameOver !== 1) {
+      gameBoard.playRound('O', i);
+      currentMarker = gameBoard.gameBoard[i];
+    }
+    ui.renderBoard(i);
+    ui.getBoardContainer()[i].innerHTML = currentMarker;
+    currentMarker = event.target.innerHTML;
 
-  checkForWinner();
-  
-}
+    checkForWinner();
+  }
 }
 function checkForWinner() {
   xIndices = getInd(gameBoard.gameBoard, 'X');
@@ -88,33 +118,27 @@ function checkForWinner() {
           );
 
           if (currentMarker === 'X') {
-            gameBoardHTMLCollection[filteredArray[0]].style.color = 'red';
-            gameBoardHTMLCollection[filteredArray[1]].style.color = 'red';
-            gameBoardHTMLCollection[filteredArray[2]].style.color = 'red';
+            ui.getBoardContainer()[filteredArray[0]].style.color = 'red';
+            ui.getBoardContainer()[filteredArray[1]].style.color = 'red';
+            ui.getBoardContainer()[filteredArray[2]].style.color = 'red';
             currentMarker = 'X';
           } else {
-            gameBoardHTMLCollection[filteredArray2[0]].style.color = 'blue';
-            gameBoardHTMLCollection[filteredArray2[1]].style.color = 'blue';
-            gameBoardHTMLCollection[filteredArray2[2]].style.color = 'blue';
+            ui.getBoardContainer()[filteredArray2[0]].style.color = 'blue';
+            ui.getBoardContainer()[filteredArray2[1]].style.color = 'blue';
+            ui.getBoardContainer()[filteredArray2[2]].style.color = 'blue';
             currentMarker = 'O';
           }
-         winMessage.innerHTML = `Player ${currentMarker} Wins!`;
-         gameOver = 1;
-          
+          ui.renderWinScreen(currentMarker);
+          gameOver = 1;
+
           break;
-        } else {determineTie()}
-          
+        } else {
+          determineTie();
         }
       }
     }
-}
-
-
-(function () {
-  for (let i = 0; i < gameBoardHTMLCollection.length; i++) {
-    gameBoardHTMLCollection[i].addEventListener('click', playRound);
   }
-})();
+}
 
 function getInd(arr, val) {
   let index = [],
@@ -126,32 +150,28 @@ function getInd(arr, val) {
 }
 
 function determineTie() {
- let arrayCount = 0
+  let arrayCount = 0;
   for (i = 0; i < gameBoard.gameBoard.length; i++) {
     if (gameBoard.gameBoard[i] !== '') {
-      arrayCount++
-    } 
+      arrayCount++;
+    }
   }
-     
+
   if (arrayCount === 9 && winMessage.innerHTML === '') {
-  winMessage.innerHTML = "It's a Tie!";
-   
- 
- 
-}
+    winMessage.innerHTML = "It's a Tie!";
+  }
 }
 
-function restartGame() {
+const restart = function restartGame() {
   gameBoard.gameBoard = ['', '', '', '', '', '', '', '', ''];
-  for (i = 0; i < gameBoardHTMLCollection.length; i++) {
-    gameBoardHTMLCollection[i].innerHTML = '';
-    gameBoardHTMLCollection[i].style.color = '';
+  for (i = 0; i < ui.getBoardContainer().length; i++) {
+    ui.getBoardContainer()[i].innerHTML = '';
+    ui.getBoardContainer()[i].style.color = '';
   }
-  winMessage.innerHTML = '';
+  ui.renderWinScreen('');
 
   gameOver = 0;
   currentMarker = 'O';
-}
+};
 
-restartButton.addEventListener('click', restartGame);
-
+restartButton.addEventListener('click', restart);
