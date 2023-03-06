@@ -1,4 +1,3 @@
-const restartButton = document.getElementById('restart-btn');
 let currentMarker = 'O';
 let filteredArray;
 let gameOver = 0;
@@ -6,7 +5,6 @@ let count = 0;
 
 const gameBoard = {
   gameBoard: ['', '', '', '', '', '', '', '', ''],
-
   playRound(letter, index) {
     this.gameBoard[index] = letter;
   },
@@ -22,32 +20,18 @@ const ui = {
   renderBoard(i) {
     const container = this.getBoardContainer();
     container[i].innerHTML = currentMarker;
-    // container.forEach(function (item) {
-    //   container.innerHTML = "X"
-    // render a square in the container with the appropriate letter
-    // })
   },
+
   renderWinScreen(currentMarker) {
     const winMessage = document.getElementById('win-message');
-
-    winMessage.innerHTML = `Player ${currentMarker} Wins!`;
-
-    // render a different screen declaring the player passed in as the winner
+    if (currentMarker === '') {
+      winMessage.innerHTML = '';
+    } else if (currentMarker === 'Its a Tie!') {
+      winMessage.innerHTML = 'Its a Tie!';
+    } else {
+      winMessage.innerHTML = `Player ${currentMarker} Wins!`;
+    }
   },
-};
-
-(function () {
-  for (let i = 0; i < ui.getBoardContainer().length; i++) {
-    ui.getBoardContainer()[i].addEventListener('click', playGame);
-  }
-})();
-const gamePlayers = {
-  Player1: '',
-  Player2: '',
-};
-
-const controlGame = {
-  renderContent: () => {},
 };
 
 const winConditions = [
@@ -157,10 +141,12 @@ function determineTie() {
     }
   }
 
-  if (arrayCount === 9 && winMessage.innerHTML === '') {
-    winMessage.innerHTML = "It's a Tie!";
+  if (arrayCount === 9) {
+    ui.renderWinScreen('Its a Tie!');
   }
 }
+
+//event listeners for the grid and restart button
 
 const restart = function restartGame() {
   gameBoard.gameBoard = ['', '', '', '', '', '', '', '', ''];
@@ -174,4 +160,10 @@ const restart = function restartGame() {
   currentMarker = 'O';
 };
 
-restartButton.addEventListener('click', restart);
+(function () {
+  for (let i = 0; i < ui.getBoardContainer().length; i++) {
+    ui.getBoardContainer()[i].addEventListener('click', playGame);
+  }
+  const restartButton = document.getElementById('restart-btn');
+  restartButton.addEventListener('click', restart);
+})();
