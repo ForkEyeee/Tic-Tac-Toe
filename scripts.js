@@ -1,5 +1,6 @@
 let currentMarker = 'O';
 let filteredArray;
+let filteredArray2;
 let gameOver = 0;
 let count = 0;
 
@@ -9,6 +10,19 @@ const gameBoard = {
     this.gameBoard[index] = letter;
   },
 };
+
+
+
+
+
+
+
+// const gameBoard = {
+//   gameBoard: ['', '', '', '', '', '', '', '', ''],
+//   playRound(letter, index) {
+//     this.gameBoard[index] = letter;
+//   },
+// };
 
 const ui = {
   getBoardContainer() {
@@ -50,13 +64,13 @@ const winConditions = [
   [2, 4, 6],
 ];
 
-function handleClick(event) {
+function getGridIndex(event) {
   let i = Array.from(ui.getBoardContainer()).indexOf(event.target);
   return i;
 }
 
 function playGame(event) {
-  let i = handleClick(event);
+  let i = getGridIndex(event);
   if (ui.getBoardContainer()[i].innerHTML === '' && gameOver !== 1) {
     if (gameBoard.gameBoard[i] === '' && currentMarker === 'O') {
       gameBoard.playRound('X', i);
@@ -69,9 +83,23 @@ function playGame(event) {
     ui.getBoardContainer()[i].innerHTML = currentMarker;
     currentMarker = event.target.innerHTML;
 
-    checkForWinner();
+    checkForWinner2();
   }
 }
+
+
+function checkForWinner2 (){
+  let winningArray = checkForWinner();
+  if (winningArray !== undefined){ 
+    ui.getBoardContainer()[winningArray[0]].style.color = 'red';
+    ui.getBoardContainer()[winningArray[1]].style.color = 'red';
+    ui.getBoardContainer()[winningArray[2]].style.color = 'red';
+  ui.renderWinScreen(currentMarker);
+  gameOver = 1;
+  } else {return;}
+} 
+
+
 function checkForWinner() {
   xIndices = getInd(gameBoard.gameBoard, 'X');
   oIndices = getInd(gameBoard.gameBoard, 'O');
@@ -100,29 +128,23 @@ function checkForWinner() {
               item === winConditions[u][1] ||
               item === winConditions[u][2]
           );
+          if (filteredArray.length === 3) {
+            return filteredArray
+          } else{return filteredArray2}
+         
+        } else {determineTie();
+          
+        }
 
-          if (currentMarker === 'X') {
-            ui.getBoardContainer()[filteredArray[0]].style.color = 'red';
-            ui.getBoardContainer()[filteredArray[1]].style.color = 'red';
-            ui.getBoardContainer()[filteredArray[2]].style.color = 'red';
-            currentMarker = 'X';
-          } else {
-            ui.getBoardContainer()[filteredArray2[0]].style.color = 'blue';
-            ui.getBoardContainer()[filteredArray2[1]].style.color = 'blue';
-            ui.getBoardContainer()[filteredArray2[2]].style.color = 'blue';
-            currentMarker = 'O';
-          }
-          ui.renderWinScreen(currentMarker);
-          gameOver = 1;
+         
 
           break;
-        } else {
-          determineTie();
-        }
+        } 
       }
     }
+    
   }
-}
+
 
 function getInd(arr, val) {
   let index = [],
