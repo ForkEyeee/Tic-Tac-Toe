@@ -4,18 +4,21 @@ let filteredArray2;
 let gameOver = 0;
 let count = 0;
 
-const gameBoard = {
-  gameBoard: ['', '', '', '', '', '', '', '', ''],
-  playRound(letter, index) {
-    this.gameBoard[index] = letter;
-  },
-};
+const gameBoard = (function () {
+  let board = ['', '', '', '', '', '', '', '', ''];
 
-
-
-
-
-
+  return {
+    playRound(letter, index) {
+      board[index] = letter;
+    },
+    getBoard() {
+      return board;
+    },
+    resetBoard() {
+      board = ['', '', '', '', '', '', '', '', ''];
+    },
+  };
+})();
 
 // const gameBoard = {
 //   gameBoard: ['', '', '', '', '', '', '', '', ''],
@@ -72,12 +75,12 @@ function getGridIndex(event) {
 function playGame(event) {
   let i = getGridIndex(event);
   if (ui.getBoardContainer()[i].innerHTML === '' && gameOver !== 1) {
-    if (gameBoard.gameBoard[i] === '' && currentMarker === 'O') {
+    if (gameBoard.getBoard()[i] === '' && currentMarker === 'O') {
       gameBoard.playRound('X', i);
-      currentMarker = gameBoard.gameBoard[i];
-    } else if (gameBoard.gameBoard[i] === '' && gameOver !== 1) {
+      currentMarker = gameBoard.getBoard()[i];
+    } else if (gameBoard.getBoard()[i] === '' && gameOver !== 1) {
       gameBoard.playRound('O', i);
-      currentMarker = gameBoard.gameBoard[i];
+      currentMarker = gameBoard.getBoard()[i];
     }
     ui.renderBoard(i);
     ui.getBoardContainer()[i].innerHTML = currentMarker;
@@ -87,22 +90,22 @@ function playGame(event) {
   }
 }
 
-
-function checkForWinner2 (){
+function checkForWinner2() {
   let winningArray = checkForWinner();
-  if (winningArray !== undefined){ 
+  if (winningArray !== undefined) {
     ui.getBoardContainer()[winningArray[0]].style.color = 'red';
     ui.getBoardContainer()[winningArray[1]].style.color = 'red';
     ui.getBoardContainer()[winningArray[2]].style.color = 'red';
-  ui.renderWinScreen(currentMarker);
-  gameOver = 1;
-  } else {return;}
-} 
-
+    ui.renderWinScreen(currentMarker);
+    gameOver = 1;
+  } else {
+    return;
+  }
+}
 
 function checkForWinner() {
-  xIndices = getInd(gameBoard.gameBoard, 'X');
-  oIndices = getInd(gameBoard.gameBoard, 'O');
+  xIndices = getInd(gameBoard.getBoard(), 'X');
+  oIndices = getInd(gameBoard.getBoard(), 'O');
   if (gameOver != 1) {
     for (u = 0; u < winConditions.length; u++) {
       x = 0;
@@ -129,22 +132,19 @@ function checkForWinner() {
               item === winConditions[u][2]
           );
           if (filteredArray.length === 3) {
-            return filteredArray
-          } else{return filteredArray2}
-         
-        } else {determineTie();
-          
+            return filteredArray;
+          } else {
+            return filteredArray2;
+          }
+        } else {
+          determineTie();
         }
 
-         
-
-          break;
-        } 
+        break;
       }
     }
-    
   }
-
+}
 
 function getInd(arr, val) {
   let index = [],
@@ -157,8 +157,8 @@ function getInd(arr, val) {
 
 function determineTie() {
   let arrayCount = 0;
-  for (i = 0; i < gameBoard.gameBoard.length; i++) {
-    if (gameBoard.gameBoard[i] !== '') {
+  for (i = 0; i < gameBoard.getBoard().length; i++) {
+    if (gameBoard.getBoard()[i] !== '') {
       arrayCount++;
     }
   }
@@ -171,7 +171,7 @@ function determineTie() {
 //event listeners for the grid and restart button
 
 const restart = function restartGame() {
-  gameBoard.gameBoard = ['', '', '', '', '', '', '', '', ''];
+  gameBoard.resetBoard();
   for (i = 0; i < ui.getBoardContainer().length; i++) {
     ui.getBoardContainer()[i].innerHTML = '';
     ui.getBoardContainer()[i].style.color = '';
