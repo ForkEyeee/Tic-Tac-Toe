@@ -1,12 +1,6 @@
-let currentMarker = 'O';
-let filteredArray;
-let filteredArray2;
-let gameOver = 0;
-let count = 0;
-
 const gameBoard = (function () {
   let board = ['', '', '', '', '', '', '', '', ''];
-
+  //board is private and only retreivable with method getBoard()
   return {
     playRound(letter, index) {
       board[index] = letter;
@@ -20,14 +14,21 @@ const gameBoard = (function () {
   };
 })();
 
-// const gameBoard = {
-//   gameBoard: ['', '', '', '', '', '', '', '', ''],
-//   playRound(letter, index) {
-//     this.gameBoard[index] = letter;
-//   },
-// };
-
 const ui = {
+  currentMarker: '',
+  gameOver: 0,
+
+  setMarker() {
+    if (this.currentMarker === '') {
+      ui.currentMarker = 'X';
+    } else if (this.currentMarker === 'X') {
+      ui.currentMarker = 'O';
+    } else if (this.currentMarker === 'O') {
+      ui.currentMarker = 'X';
+    }
+    return ui.currentMarker;
+  },
+
   getBoardContainer() {
     const gameBoardNodeList = document.querySelectorAll('.grid-cell');
     const gameBoardHTMLCollection = Array.from(gameBoardNodeList);
@@ -36,7 +37,8 @@ const ui = {
 
   renderBoard(i) {
     const container = this.getBoardContainer();
-    container[i].innerHTML = currentMarker;
+    container[i].innerHTML = this.currentMarker;
+    return container;
   },
 
   renderWinScreen(currentMarker) {
@@ -73,19 +75,15 @@ function getGridIndex(event) {
 }
 
 function playGame(event) {
-  let i = getGridIndex(event);
-  if (ui.getBoardContainer()[i].innerHTML === '' && gameOver !== 1) {
-    if (gameBoard.getBoard()[i] === '' && currentMarker === 'O') {
-      gameBoard.playRound('X', i);
-      currentMarker = gameBoard.getBoard()[i];
-    } else if (gameBoard.getBoard()[i] === '' && gameOver !== 1) {
-      gameBoard.playRound('O', i);
-      currentMarker = gameBoard.getBoard()[i];
+  if (ui.gameOver !== 1) {
+    let i = getGridIndex(event);
+    ui.setMarker();
+    if (gameBoard.getBoard()[i] === '') {
+      gameBoard.playRound(ui.currentMarker, i);
+      if (ui.getBoardContainer()[i].innerHTML === '') {
+      }
     }
     ui.renderBoard(i);
-    ui.getBoardContainer()[i].innerHTML = currentMarker;
-    currentMarker = event.target.innerHTML;
-
     checkForWinner2();
   }
 }
@@ -96,8 +94,8 @@ function checkForWinner2() {
     ui.getBoardContainer()[winningArray[0]].style.color = 'red';
     ui.getBoardContainer()[winningArray[1]].style.color = 'red';
     ui.getBoardContainer()[winningArray[2]].style.color = 'red';
-    ui.renderWinScreen(currentMarker);
-    gameOver = 1;
+    ui.renderWinScreen(ui.currentMarker);
+    ui.gameOver = 1;
   } else {
     return;
   }
@@ -106,7 +104,7 @@ function checkForWinner2() {
 function checkForWinner() {
   xIndices = getInd(gameBoard.getBoard(), 'X');
   oIndices = getInd(gameBoard.getBoard(), 'O');
-  if (gameOver != 1) {
+  if (ui.gameOver != 1) {
     for (u = 0; u < winConditions.length; u++) {
       x = 0;
       for (x = 0; x <= 2; x++) {
@@ -118,23 +116,23 @@ function checkForWinner() {
             oIndices.includes(winConditions[u][1]) &&
             oIndices.includes(winConditions[u][2]))
         ) {
-          filteredArray = xIndices.filter(
+          xIndices = xIndices.filter(
             (item) =>
               item === winConditions[u][0] ||
               item === winConditions[u][1] ||
               item === winConditions[u][2]
           );
 
-          filteredArray2 = oIndices.filter(
+          oIndices = oIndices.filter(
             (item) =>
               item === winConditions[u][0] ||
               item === winConditions[u][1] ||
               item === winConditions[u][2]
           );
-          if (filteredArray.length === 3) {
-            return filteredArray;
+          if (xIndices.length === 3) {
+            return xIndices;
           } else {
-            return filteredArray2;
+            return oIndices;
           }
         } else {
           determineTie();
@@ -178,8 +176,8 @@ const restart = function restartGame() {
   }
   ui.renderWinScreen('');
 
-  gameOver = 0;
-  currentMarker = 'O';
+  ui.gameOver = 0;
+  ui.setMarker();
 };
 
 (function () {
