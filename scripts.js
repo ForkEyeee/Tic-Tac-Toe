@@ -47,7 +47,9 @@ const ui = {
       winMessage.innerHTML = '';
     } else if (currentMarker === 'Its a Tie!') {
       winMessage.innerHTML = 'Its a Tie!';
+      winMessage.style.color = 'white';
     } else {
+      winMessage.style.color = 'white';
       winMessage.innerHTML = `Player ${currentMarker} Wins!`;
     }
   },
