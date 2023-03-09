@@ -77,8 +77,8 @@ function getGridIndex(event) {
 }
 
 function playGame(event) {
-  if (ui.gameOver !== 1) {
-    let i = getGridIndex(event);
+  let i = getGridIndex(event);
+  if (ui.gameOver !== 1 && ui.getBoardContainer()[i].innerHTML === '') {
     ui.setMarker();
     if (gameBoard.getBoard()[i] === '') {
       gameBoard.playRound(ui.currentMarker, i);
